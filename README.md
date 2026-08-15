@@ -1,255 +1,124 @@
-# 🌌 Nebula Framework — Star Wars RP для Garry's Mod
+# 🌌 Nebula Framework v1.1.0
 
-Кастомный фреймворк для ролевых серверов во вселенной Звёздных Войн.
-Вдохновлён **Helix Framework** и **Clockwork**, построен с нуля с фокусом на производительность и удобство кастомизации.
+**RP Framework for Garry's Mod**
 
----
-
-## 📋 Содержание
-
-- [Установка](#-установка)
-- [Структура проекта](#-структура-проекта)
-- [Системы](#-системы)
-- [Конфигурация](#-конфигурация)
-- [Команды](#-команды)
-- [Кастомизация](#-кастомизация)
+> *Архитектура: Helix + Clockwork*
 
 ---
 
-## 🚀 Установка
+## 📖 Описание
 
-1. Скопируйте папку `gamemodes/nebula` в директорию `garrysmod/gamemodes/`
-2. Убедитесь что структура папок корректна
-3. Запустите сервер с параметром `-gamemode nebula`
-4. Или добавьте в `server.cfg`:
-   ```
-   gamemode nebula
-   ```
+Nebula Framework — модульный RP фреймворк для Garry's Mod, вдохновлённый архитектурой **Helix** и **Clockwork**.
+
+Создан для быстрого создания ролевых серверов любой тематики.
 
 ---
 
-## 📁 Структура проекта
+## 🏗️ Архитектура
 
 ```
-nebula/
-├── gamemode.txt                 # Описание гейммода
-├── gamemode/
-│   ├── shared.lua              # Точка входа (shared)
-│   ├── core/
-│   │   ├── sh_util.lua         # Утилиты
-│   │   ├── sh_config.lua       # Система конфигурации
-│   │   ├── sh_database.lua     # БД (shared)
-│   │   ├── sv_database.lua     # БД (server) — SQLite
-│   │   ├── sh_hooks.lua        # Хук-система
-│   │   ├── sh_character.lua    # Персонажи (shared)
-│   │   ├── sv_character.lua    # Персонажи (server)
-│   │   └── cl_character.lua    # Персонажи (client)
-│   ├── modules/
-│   │   ├── sh_inventory.lua    # Инвентарь (shared)
-│   │   ├── sv_inventory.lua    # Инвентарь (server)
-│   │   ├── cl_inventory.lua    # Инвентарь (client)
-│   │   ├── sh_factions.lua     # Фракции
-│   │   ├── sh_economy.lua      # Экономика (shared)
-│   │   ├── sv_economy.lua      # Экономика (server)
-│   │   ├── sh_chat.lua         # Чат (shared)
-│   │   ├── sv_chat.lua         # Чат (server)
-│   │   ├── cl_chat.lua         # Чат (client)
-│   │   └── sh_animation.lua    # Анимации
-│   ├── derma/
-│   │   ├── cl_fonts.lua        # Шрифты
-│   │   ├── cl_theme.lua        # Тема оформления
-│   │   ├── cl_inventory.lua    # UI инвентаря
-│   │   ├── cl_character.lua    # UI персонажей
-│   │   └── cl_hud.lua          # HUD
-│   ├── schema/
-│   │   └── sh_schema.lua       # Схема (предметы, настройки)
-│   ├── player_class/
-│   │   └── player_nebula.lua   # Класс игрока
-│   └── entities/
-│       └── entities/
-│           └── nebula_item/    # Энтити предмета
-│               ├── init.lua
-│               ├── shared.lua
-│               └── cl_init.lua
-└── README.md
+gamemodes/nebula/
+├── shared.lua              — точка входа
+├── core/                   — ядро (13 файлов)
+│   ├── sh_util.lua         — утилиты
+│   ├── sh_config.lua       — конфигурация
+│   ├── sh_database.lua     — БД (SQLite)
+│   ├── sh_character.lua    — система персонажей
+│   ├── sh_permissions.lua  — ранги и права
+│   ├── sh_convars.lua      — ConVar система
+│   ├── sh_safety.lua       — pcall защита
+│   ├── sh_spawn.lua        — спавн-поинты
+│   ├── sh_hotreload.lua    — hot-reload модулей
+│   ├── sh_logger.lua       — логирование
+│   ├── sh_antispam.lua     — антиспам
+│   └── sv_admin.lua        — админ-команды
+├── modules/                — модули (18 файлов)
+│   ├── sh_inventory.lua    — инвентарь
+│   ├── sh_factions.lua     — фракции
+│   ├── sh_economy.lua      — экономика
+│   ├── sh_chat.lua         — чат-система
+│   ├── sh_animation.lua    — анимации
+│   ├── sh_npc.lua          — NPC система
+│   ├── sh_quest.lua        — квесты
+│   ├── sh_craft.lua        — крафт
+│   └── sh_build.lua        — постройки
+└── derma/                  — UI (7 файлов)
+    ├── cl_fonts.lua        — шрифты
+    ├── cl_theme.lua        — тема
+    ├── cl_hud.lua          — HUD
+    ├── cl_admin.lua        — админ-панель (F3)
+    └── cl_inventory.lua    — UI инвентаря
 ```
 
 ---
 
-## ⚙️ Системы
+## ⚙️ Модули
 
-### 👤 Система персонажей
-- Создание/удаление/загрузка персонажей
-- Максимум 3 персонажа (настраивается)
-- Валидация имён (Имя Фамилия)
-- Описание персонажа
-- Выбор фракции и модели
-
-### 🎒 Инвентарь
-- Предметы с категориями, весом, стаками
-- Использование, выброс, подбор с земли
-- Уникальные предметы (только 1 в инвентаре)
-- Стекуемые предметы
-- Мирные предметы (энтити на земле)
-
-### 🏛️ Фракции (Star Wars)
-| Фракция | Описание |
-|---------|----------|
-| Galactic Empire | Империя с военной мощью |
-| Rebel Alliance | Альянс повстанцев |
-| Citizen | Обычные жители |
-| Bounty Hunters' Guild | Охотники за головами |
-| Smugglers' Guild | Контрабандисты |
-| Mandalorian Clan | Мандалорцы |
-
-### 💰 Экономика
-- Валюта: Credits (CR)
-- Стартовые деньги: 500 CR
-- Зарплаты по фракциям
-- Автоматические выплаты
-- Переводы между игроками
-- Лимит: 10M CR
-
-### 💬 Чат-система
-| Команда | Тип | Дальность |
-|---------|-----|-----------|
-| `/me` или `*` | Действие | 500 units |
-| `/y` или `!` | Крик | 1000 units |
-| `/w` | Шёпот | 150 units |
-| `/r` | Радио | Фракция |
-| `//` или `((` | LOOC | 500 units |
-| `/a` | Админ | Глобально |
-
-### 🎭 Анимации
-| Анимация | Описание |
-|----------|----------|
-| `/sit` | Сесть |
-| `/wave` | Помахать |
-| `/salute` | Салют |
-| `/surrender` | Сдаться |
-| `/dance` | Танец |
-| `/bow` | Поклон |
-| `/kneel` | На колени |
+| Модуль | Описание | Файлы |
+|--------|----------|-------|
+| **Database** | SQLite, автосейв, кэш | 2 |
+| **Character** | Создание, загрузка, валидация | 3 |
+| **Inventory** | Предметы, стаки, мирные предметы | 3 |
+| **Factions** | Фракции, классы, лоадауты | 1 |
+| **Economy** | Валюта, зарплаты, переводы | 2 |
+| **Chat** | IC, OOC, LOOC, шёпот, крик, радио | 3 |
+| **Animation** | 12+ анимаций | 1 |
+| **NPC** | Торговцы, диалоги, квестодатели | 2 |
+| **Quest** | Цепочки, прогресс, награды | 2 |
+| **Craft** | Рецепты, станции, шанс успеха | 2 |
+| **Build** | Баррикады, лимиты, возврат ресурсов | 2 |
+| **Permissions** | 6 рангов, 12 прав | 1 |
+| **Admin** | F3 панель, команды | 2 |
 
 ---
 
-## 🔧 Конфигурация
+## 🔧 ConVar (настройки)
 
-Все настройки хранятся в `data/nebula/config.json` и управляются через `Nebula.config`.
-
-### Ключевые настройки
-
-| Ключ | Значение по умолчанию | Описание |
-|------|----------------------|----------|
-| `server_name` | Nebula Star Wars RP | Название сервера |
-| `max_characters` | 3 | Макс. персонажей |
-| `starting_credits` | 500 | Стартовые деньги |
-| `currency_name` | Credits | Название валюты |
-| `currency_symbol` | CR | Символ валюты |
-| `salary_interval` | 300 | Интервал зарплат (сек) |
-| `chat_range` | 500 | Дальность IC чата |
-| `walk_speed` | 180 | Скорость ходьбы |
-| `run_speed` | 280 | Скорость бега |
+```
+nebula_max_characters 3      — макс персонажей
+nebula_starting_money 500    — стартовые деньги
+nebula_walk_speed 180        — скорость ходьбы
+nebula_run_speed 280         — скорость бега
+nebula_chat_range 500        — дальность чата
+nebula_salary_interval 300   — интервал зарплат
+nebula_death_penalty 5       — штраф при смерти %
+nebula_debug 0               — уровень дебага
+```
 
 ---
 
-## 🎮 Команды (консоль)
+## 🎮 Команды
 
 | Команда | Описание | Права |
 |---------|----------|-------|
-| `nebula_char_reload [player]` | Перезагрузить персонажа | Admin |
-| `nebula_char_saveall` | Сохранить всех | Admin |
-| `nebula_give_money <player> <amount>` | Выдать деньги | Admin |
-| `nebula_set_money <player> <amount>` | Установить деньги | SuperAdmin |
+| `nebula_tp <player>` | Телепорт к игроку | Moderator |
+| `nebula_bring <player>` | Телепорт к себе | Moderator |
+| `nebula_kick <player> <reason>` | Кик | Moderator |
+| `nebula_give_item <player> <item>` | Выдать предмет | Admin |
+| `nebula_setrank <steamid> <rank>` | Установить ранг | Admin |
+| `nebula_errors` | Просмотр ошибок | Admin |
+| `nebula_reload <module>` | Hot-reload модуля | SuperAdmin |
 
 ---
 
-## 🎨 Кастомизация
+## 📊 Статистика
 
-### Добавление новой фракции
-
-В `schema/sh_schema.lua`:
-
-```lua
-Nebula.faction:Register("custom_faction", {
-    name = "Custom Faction",
-    description = "Описание фракции",
-    color = Color(255, 100, 0),
-    model = "models/player/...",
-    weapons = {"weapon_pistol"},
-    items = {"custom_id"},
-    health = 100,
-    armor = 50,
-    salary = 100,
-    classes = {
-        {id = "trooper", name = "Trooper", salary = 80},
-    },
-})
-```
-
-### Добавление нового предмета
-
-```lua
-Nebula.inventory:RegisterItem("custom_item", {
-    name = "Custom Item",
-    description = "Описание предмета",
-    model = "models/...",
-    category = "Category",
-    weight = 1.0,
-    stackable = true,
-    maxStack = 5,
-    usable = true,
-    useText = "Use",
-    onUse = function(ply, item)
-        -- Логика использования
-        return true -- true = потратить предмет
-    end,
-})
-```
-
-### Добавление новой анимации
-
-```lua
-Nebula.animation:Register("custom_anim", {
-    name = "Custom Animation",
-    description = "Описание",
-    sequenceName = "animation_sequence",
-    duration = 3, -- 0 = бесконечно
-    movement = false,
-})
-```
-
-### Добавление нового типа чата
-
-```lua
-Nebula.chat:RegisterType("custom", {
-    name = "Custom",
-    color = Color(255, 200, 100),
-    range = 300,
-    format = "%s: [%s]",
-})
-```
+| | |
+|---|---|
+| Файлов | 45 Lua |
+| Строк | 6,887 |
+| Модулей | 12 |
+| ConVar | 15 |
+| Рангов | 6 |
+| Прав | 12 |
 
 ---
 
-## 🔌 Хуки (для плагинов)
+## 🔗 GitHub
 
-| Хук | Аргументы | Описание |
-|-----|-----------|----------|
-| `Nebula:CharacterLoaded` | `ply, charID` | Персонаж загружен |
-| `Nebula:CharacterCreated` | `ply, charID, data` | Персонаж создан |
-| `Nebula:CharacterDeleted` | `ply, charID` | Персонаж удалён |
-| `Nebula:InventoryChanged` | `ply, action, itemID, itemData` | Инвентарь изменён |
-| `Nebula:MoneyChanged` | `ply, old, new, reason` | Деньги изменены |
-| `Nebula:FactionChanged` | `ply, old, new` | Фракция изменена |
-| `Nebula:PlayerDataLoaded` | `ply` | Данные игрока загружены |
+- **Фреймворк:** https://github.com/fieryartem2013-crypto/nebula-framework
+- **Сервер (пример):** https://github.com/fieryartem2013-crypto/quarantine-rp
 
 ---
 
-## 📝 Лицензия
-
-MIT License — используйте как хотите!
-
----
-
-**Nebula Framework v1.0.0** — Создано с ❤️ для сообщества Star Wars RP
+**Nebula Framework v1.1.0** — Helix + Clockwork Architecture
