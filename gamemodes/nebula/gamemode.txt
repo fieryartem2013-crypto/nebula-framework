@@ -1,0 +1,16 @@
+"Gamemode"
+{
+    "title"      "Nebula RP"
+    "version"    "1.0.0"
+    "type"       "roleplay"
+    "author"     "Nebula Team"
+    "url"        ""
+    "fallback"   "sandbox"
+    "maps"       ""
+    "menuscale"  "1"
+    "workshopid" ""
+    "ignore"     ""
+    "base"       "sandbox"
+    "blocks"     ""
+    "entities"   ""
+}
