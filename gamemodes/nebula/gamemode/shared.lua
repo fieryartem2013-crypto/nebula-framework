@@ -46,10 +46,16 @@ Nebula.util.Include = function(path, realm)
 end
 
 -- Load core files
+Nebula.util.Include("nebula/core/sh_safety.lua", "shared")
+Nebula.util.Include("nebula/core/sh_convars.lua", "shared")
+Nebula.util.Include("nebula/core/sh_permissions.lua", "shared")
+Nebula.util.Include("nebula/core/sh_spawn.lua", "shared")
 Nebula.util.Include("nebula/core/sh_util.lua", "shared")
 Nebula.util.Include("nebula/core/sh_config.lua", "shared")
 Nebula.util.Include("nebula/core/sh_database.lua", "shared")
 Nebula.util.Include("nebula/core/sv_database.lua", "server")
+Nebula.util.Include("nebula/core/sv_netstrings.lua", "server")
+Nebula.util.Include("nebula/core/sv_admin.lua", "server")
 
 -- Load hook system
 Nebula.util.Include("nebula/core/sh_hooks.lua", "shared")
@@ -80,6 +86,7 @@ Nebula.util.Include("nebula/derma/cl_theme.lua", "client")
 Nebula.util.Include("nebula/derma/cl_inventory.lua", "client")
 Nebula.util.Include("nebula/derma/cl_character.lua", "client")
 Nebula.util.Include("nebula/derma/cl_hud.lua", "client")
+Nebula.util.Include("nebula/derma/cl_admin.lua", "client")
 
 MsgC(Color(100, 180, 255), "[Nebula] ", color_white, "Framework loaded successfully!\n")
 
